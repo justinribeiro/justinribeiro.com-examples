@@ -1,0 +1,192 @@
+$Id: INSTALL,v 1.1 2006/11/14 14:06:50 dsr Exp $
+
+General
+=======
+
+The SAM extension is a framework that provides a very simple API that can be used to
+access a number of messaging middleware systems. Currently the package
+includes built-in support for the MQTT messaging protocol and support for the IBM
+Messaging and Queuing middleware products. The SAM framework and MQTT support
+can be built and used without any other prerequisites. Support for protocols other than
+MQTT is provided via a set of libraries and some client side code referred to as XMS.
+
+If you only intend to use the built-in MQTT support then you can build and configure SAM as
+an extension or simply refer to "php_sam.php" with a "requires" or "requires_once" clause
+in your PHP script. In this case you need only install the code without building the
+extension using the pear installer:
+
+pecl install -B SAM
+
+Prerequisites
+=============
+
+The SAM package can build 2 extension libraries; the basic SAM extension and another
+extension, sam_xms, that is dependant on the IBM XMS libraries. If you wish to build
+or execute the sam_xms extension you will the XMS package which is
+available as a free download in the guise of IBM support pack IA94
+and provides access to a range of IBM messaging middleware products.
+There is a description of this package and download links at:
+
+http://www-1.ibm.com/support/docview.wss?uid=swg24007092
+
+If you intend to access IBM messaging products via the WMQ, WPM, or RTT protocols
+you will need to install the XMS package and build and enable the additional sam_xms extension.
+
+If you intend to use SAM via XMS to access the Messaging and Queuing infrastructure within
+WebSphere MQ then you will also need to have installed a local MQ queue manager or
+installed the WebSphere MQ clients package. The clients package is freely available
+as a support pack (MQC6) from:
+
+http://www-1.ibm.com/support/docview.wss?rs=171&uid=swg24009961&loc=en_US&cs=utf-8&lang=en
+
+If you are only aiming to experiment with sending messages to and from WebSphere Application
+Server queues using the WebSphere Platform Messaging protocol (WPM) or intend to just use the
+built-in MQTT support, you do not need to install the MQC6 package.
+
+After installing these packages you will need to ensure the XMS binary and, if you are
+using it, the MQ client bin directory are included in the PATH environment variable
+so that Apache and PHP can find the dependent .DLLs/libraries.
+
+
+Linux installation steps
+========================
+
+The sam extension is supplied as a PECL module, which
+you should be able to download and install in one step as follows:
+
+pecl install sam
+
+(You will probably need to be logged in with root privileges to do this.)
+
+Make sure that the module is loaded by PHP, by defining it in your php.ini file:
+
+extension=sam.so
+
+If using the XMS capabilities additionally enable the sam_xms extension
+
+extension=sam_xms.so
+
+If you cannot use the PEAR installer, you can download the extension and build
+it manually:
+
+pear download sam          #downloads sam-<version>.tgz
+tar -xzf sam-<version>.tgz
+cd sam-<version>
+phpize
+./configure
+make
+make install               #you will probably need root privileges for this step
+
+To work with the very latest source, you'll need to extract it from cvs and
+build manually as above.
+
+If you have any problems, you are welcome to contact the maintainers.
+
+Windows installation steps
+==========================
+
+Currently you will need to build the sam extension for Windows as there
+are no pre-built binaries. The extension can be built using the standard
+Windows extension build procedures.
+
+You should first install the PHP parts of the SAM package with the following incantation:
+
+pecl install -B sam
+
+The -B option tells the pear install process not to try and build the C code
+into libraries.
+
+You will need the PHP source tree for the version of PHP you wish to build
+the SAM extension against which you can obtain from php.net. This should be
+unpacked into a working directory of your choice.
+
+You will also need the libraries and headers used by PHP extensions available
+from http://www.php.net/extra/win32build.zip and this should be unzipped so
+that is in your working directory.
+
+You should have something like:
+
+c:\php-build\-
+              |
+              |---php-5.0.5--|---build
+              |              |---ext
+              |              |--- ...
+              |
+              |---win32build--|---bin
+                              |---include
+                              |---lib
+
+You will need a compiler such as the free version of Visual Studio C++
+Express from the Microsoft web site. Also you need the Microsoft Windows
+Platform SDK which again can be downloaded from the Microsoft web site.
+
+Obtain the SAM extension source using pear (pear download sam) or by using
+CVS and copy the files to a new "sam" directory under the "ext" directory
+in your PHP source tree.
+
+To build the extension open a build environment window by going to the
+start menu->all programs->microsoft platform SDK for windows->
+  open build environment window->windows 200 build environment->
+    set windows 2000 build environment (retail)
+
+This should open a command prompt with all the environment variables set
+up to access the platform SDK etc. You then need to set the environment
+variables for Visual Studio by issuing the command "vcvars32.bat" in the
+window.
+
+Change directory to your working directory e.g. cd c:\php-build. Then
+make sure the win32build tools are accessible by adding them to the PATH
+environment variable:
+
+set PATH=..\win32build\bin;%PATH%
+
+Run the buildconf.bat command. This should rebuild the configure.js file.
+
+Run the csript command:
+
+cscript /nologo configure.js --with-sam
+
+If using the XMS capabilities this command should be:
+
+cscript /nologo configure.js -- with-sam --with-sam_xms="c:\program files\ibm\xms"
+
+The additional parameter passed for sam_xms is the installation path to the
+XMS libraries and runtime that were installed as described under prerequisites
+at the top of this file.
+
+You can specify whatever other cscript parameters you require to include or
+exclude items from the php build or select options.
+
+Assuming all has gone well so far you can now finally run a make!
+
+nmake php_sam.dll
+
+and if using the XMS capabilities:
+
+nmake php_sam_xms.dll
+
+
+Additional steps for Visual Studio 2005
+---------------------------------------
+
+If you build the SAM extension with the Microsoft Visual Studio 2005 compiler and
+tools you need to perform an additional step in the build process to ensure the
+DLLs are able to link with the C runtime libraries at runtime. This step
+includes the dependancy manifest into the DLL. Switch to the directory where the
+DLLs have been generated (usually Release_TS or Debug_TS below the php
+source directory) and issue the following magic incantation:
+
+mt.exe -manifest php_sam.dll.manifest -outputresource:php_sam.dll;2
+
+and if using the XMS capabilities:
+
+mt.exe -manifest php_sam_xms.dll.manifest -outputresource:php_sam_xms.dll;2
+
+If you build the SAM extension using the compiler and libaries from Microsoft Visual Studio 2005
+you will also need to ensure that the C runtime components are installed on the system on
+which you intend to use SAM. This can be accomplished by installing Visual Studio 2005 or
+by using the freely distributable runtime package that is available from:
+
+http://www.microsoft.com/downloads/details.aspx?familyid=32BC1BEE-A3F9-4C13-9C99-220B62A191EE&displaylang=en
+
+If you have any problems, you are welcome to contact the maintainers.

@@ -1,0 +1,26 @@
+// $Id: config.w32
+// config.w32 for extension sam
+
+
+ARG_WITH("sam", "sam support", "no");
+
+ARG_WITH("sam_xms", "sam XMS support", "no");
+
+if (PHP_SAM != "no") {
+
+    EXTENSION("sam", "php_sam.c", "shared");
+    AC_DEFINE('HAVE_SAM', 1);
+
+    if (PHP_SAM_XMS != "no") {
+
+        if ( CHECK_LIB("gxi.lib", "sam_xms", PHP_SAM_XMS + "\\tools\\lib") &&
+             CHECK_HEADER_ADD_INCLUDE("xms.h", "CFLAGS_SAM_XMS", PHP_SAM_XMS + "\\tools\\c\\include;")) {
+
+            EXTENSION("sam_xms", "php_sam_xms.c SAM_XMS_Utils.c SAM_XMS_Connection.c", "shared");
+            AC_DEFINE('HAVE_SAM_XMS', 1);
+
+        } else {
+            WARNING("sam_xms not enabled; XMS libraries and headers not found!");
+        }
+    }
+}

@@ -1,0 +1,67 @@
+{
+    "hash": "5a82d9e0f0b05a4f8890e203b95c4b8c",
+    "packages": [
+        {
+            "package": "cboden/Ratchet",
+            "version": "dev-master",
+            "source-reference": "3c617d96a29a88e81907b4c0f59c2ee6c97d12a8",
+            "commit-date": "1342155315"
+        },
+        {
+            "package": "evenement/evenement",
+            "version": "1.0.x-dev",
+            "source-reference": "v1.0.0",
+            "commit-date": "1338390068"
+        },
+        {
+            "package": "guzzle/guzzle",
+            "version": "v2.5.0"
+        },
+        {
+            "package": "react/event-loop",
+            "version": "v0.1.1"
+        },
+        {
+            "package": "react/socket",
+            "version": "dev-master",
+            "source-reference": "7e773b2cde9b5e0ada8fdfdd1118ca749f3a2cfd",
+            "commit-date": "1342364933"
+        },
+        {
+            "package": "react/stream",
+            "version": "v0.1.1"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/event-dispatcher",
+            "version": "dev-master",
+            "source-reference": "451e0befb42a5552d4e143edcb74e3b4a9733bea",
+            "commit-date": "1342739894"
+        },
+        {
+            "package": "symfony/http-foundation",
+            "version": "dev-master",
+            "alias-pretty-version": "2.1.x-dev",
+            "alias-version": "2.1.9999999.9999999-dev"
+        },
+        {
+            "package": "symfony/http-foundation",
+            "version": "dev-master",
+            "source-reference": "06d1636d4ef409cefdf5f987573d76898916c0c8",
+            "commit-date": "1342762453"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "cboden/ratchet": 20
+    }
+}
