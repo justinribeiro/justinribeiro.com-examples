@@ -1,0 +1,40 @@
+body{ font: 62.5% "Trebuchet MS", sans-serif; margin: 50px;}
+
+h1 { font-size: 1.2em; margin: .6em 0; }
+
+/* JDR: little bit of padding, from demo's on API page */
+.ui-button { outline: 0; margin:0; padding: .4em 1em .5em; text-decoration:none;  !important; cursor:pointer; position: relative; text-align: center; }
+.ui-dialog .ui-state-highlight, .ui-dialog .ui-state-error { padding: .3em;  }
+
+/* JDR: for forms */
+fieldset { padding:0; border:0; }
+label, input
+{
+    display: block;
+	font-size: 14px;
+	padding: .5em;
+}
+
+/* JDR: the validation plugin automatically includes errors in a label with a class of error, I 
+        don't want the above display:block to apply, so I set them to inline. */
+label.error 
+{
+  display: inline!important;
+}
+
+input
+{
+  width: 95%;
+}
+
+/* JDR: just some added space and defined widths */
+.jdr-blockme
+{
+  padding: 25px;
+  margin: 10px;
+}
+
+.jdr-blockwidth
+{
+  width: 400px;
+}

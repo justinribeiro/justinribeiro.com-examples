@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Demo - jQuery UI modal form window with Validation and Form plugin integration</title>
+
+<!-- JDR: main jQuery and UI libs -->
+<script language="JavaScript" type="text/javascript" src="inc/js/jquery-1.3.2.min.js"></script>
+<script language="JavaScript" type="text/javascript" src="inc/js/jquery-ui-1.7.2.custom.min.js"></script>
+
+<!-- 
+	JDR: Validation (http://bassistance.de/jquery-plugins/jquery-plugin-validation/) 
+		 Form (http://malsup.com/jquery/form/) plugins 
+-->
+<script language="JavaScript" type="text/javascript" src="inc/js/jquery.form.js"></script>
+<script language="JavaScript" type="text/javascript" src="inc/js/jquery.validate.js"></script>
+<script language="JavaScript" type="text/javascript" src="inc/js/additional-methods.js"></script>
+
+<!-- JDR: Themeroller files and my generic base -->
+<link type="text/css" href="inc/css/ui-lightness/jquery-ui-1.7.2.custom.css" rel="stylesheet" />
+<link type="text/css" href="inc/css/generic-base.css" rel="stylesheet" />
+
+<script language="JavaScript" type="text/javascript">
+jQuery(function() {
+    jQuery().ajaxError(function(a, b, e) {
+        throw e;
+    });
+	
+	// JDR: our form submit and valiation
+	var aform = $("#modal-form-test").validate({
+	    
+		// JDR: make sure we show/hide both blocks
+		errorContainer: "#errorblock-div1, #errorblock-div2",
+	    
+		// JDR: put all error messages in a UL
+		errorLabelContainer: "#errorblock-div2 ul",
+	    
+		// JDR: wrap all error messages in an LI tag
+		wrapper: "li",
+	    
+		// JDR: rules/messages are for the validation
+		rules: {
+	        fullname: "required",
+	        email: {
+	            required: true,
+	            email: true
+	                }
+	    },
+	    messages: {
+	        fullname: "Please enter your name.",
+	        email: {
+	            required: "Please enter your email address.",
+	            email: "Please enter a valid email address."
+	                }
+	    },
+		
+		// JDR: our form submit
+	    submitHandler: function(form) {
+	        jQuery(form).ajaxSubmit({
+				// JDR: the return target block
+	            target: '#client-script-return-data',
+				
+				// JDR: what to do on form submit success
+	            success: function() { $('#my-modal-form').dialog('close'); successEvents('#client-script-return-msg'); }
+	         });
+	     }
+	}); 
+	
+	// JDR: our modal dialog setup
+	var amodal = $("#my-modal-form").dialog({
+	   bgiframe: true,
+	   autoOpen: false,
+	   height: 350,
+	   width: 300,
+	   modal: true,
+	   buttons: {
+	      'Update Data': function() 
+		  { 
+		  	// JDR: submit the form
+		  	$("#modal-form-test").submit(); 
+		  },
+	      Cancel: function() 
+		  { 
+		  	// JDR: close the dialog, reset the form
+		    $(this).dialog('close'); aform.resetForm(); 
+		  }
+	   }
+	});
+	
+	// JDR: onclick action for our button
+	var abutton = $('#load-my-modal').click(function() {
+	    $('#my-modal-form').dialog('open');
+	});
+	
+	// JDR: this sets up a hover effect for all buttons
+    var abuttonglow = $(".ui-button:not(.ui-state-disabled)")
+	.hover(
+		function() {
+		    $(this).addClass("ui-state-hover");
+		},
+		function() {
+		    $(this).removeClass("ui-state-hover");
+		}
+	).mousedown(function() {
+	    $(this).addClass("ui-state-active");
+	})
+	.mouseup(function() {
+	    $(this).removeClass("ui-state-active");
+	});	
+	
+}); // JDR: end main jQuery function start
+
+function successEvents(msg) {
+
+    // JDR: microseconds to show return message block
+    var defaultmessagedisplay = 10000;
+    
+    // JDR: fade in our return message block
+    $(msg).fadeIn('slow');
+
+    // JDR: remove return message block
+    setTimeout(function() { $(msg).fadeOut('slow'); }, defaultmessagedisplay);
+};
+	
+</script>
+
+
+</head>
+<body>
+
+<!-- JDR: generic container -->
+<div class="jdr-blockwidth">
+	
+	<h1>jQuery UI modal form window with Validation and Form plugin integration</h1>
+	
+	<!-- JDR: our return message block -->
+	<div class="ui-widget ui-helper-hidden" id="client-script-return-msg">
+		<div class="ui-state-highlight ui-corner-all" style="padding: 0pt 0.7em; margin-top: 20px;"> 
+			<p><span class="ui-icon ui-icon-circle-check" style="float: left; margin-right: 0.3em;"></span>
+			<!-- JDR: our return message will go in the following span -->
+			<span id="client-script-return-msg-rtn"></span></p>
+		</div>
+	</div>
+	
+	<!-- JDR: our return target block -->
+	<div id="client-script-return-data" class="ui-widget ui-widget-content jdr-blockme">For our example, our form post from the modal will replace this text.</div>
+	
+	<!-- JDR: our button to load the modal dialog box -->
+	<button id="load-my-modal" class="ui-button ui-state-default ui-corner-all">Open Modal Form</button>
+	
+	<!-- JDR: our modal window -->
+	<div id="my-modal-form" title="Edit some data">
+		
+		<!-- JDR: form validation error container -->
+        <div class="ui-widget ui-helper-hidden" id="errorblock-div1">
+			<div class="ui-state-error ui-corner-all" style="padding: 0pt 0.7em;" id="errorblock-div2" style="display:none;"> 
+				<p>
+				   <!-- JDR: fancy icon -->
+				   <span class="ui-icon ui-icon-alert" style="float: left; margin-right: 0.3em;"></span> 
+	               <strong>Alert:</strong> Errors detected!
+				</p>
+				<!-- JDR: validation plugin will target this UL for error messages -->
+				<ul></ul>
+			</div>
+		</div>
+		
+		<!-- JDR: our form, no buttons (buttons generated by jQuery UI dialog() function) -->
+	    <form action="testme.php" name="modal-form-test" id="modal-form-test" method="POST">
+	    <fieldset>
+		    <label for="fullname">Name</label>
+		    <input type="text" name="fullname" id="fullname" class="text ui-widget-content ui-corner-all" />
+	    	
+		    <label for="email">Email</label>
+		    <input type="text" name="email" id="email" class="text ui-widget-content ui-corner-all" />
+	    </fieldset>
+	    </form>
+	</div>
+
+</div>
+
+</body>
+</html>
